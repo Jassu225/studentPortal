@@ -1,0 +1,23 @@
+{
+  "name": "studentportal",
+  "version": "1.0.0",
+  "description": "A student portal",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jassu225/studentPortal.git"
+  },
+  "keywords": [
+    "student",
+    "portal"
+  ],
+  "author": "Jaswanth Sai Sattenapalli",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jassu225/studentPortal/issues"
+  },
+  "homepage": "https://github.com/Jassu225/studentPortal#readme"
+}
