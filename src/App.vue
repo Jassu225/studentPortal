@@ -7,16 +7,13 @@
 </template>
 
 <script>
-var fs = window.require('fs');
-var readline = window.require('readline');
 
-import DBconverter from './components/dbConverter.vue';
+
 import Menu from './components/Menu.vue';
 
 export default {
   name: 'App',
   components: {
-    DBconverter,
     Menu
   }
 }

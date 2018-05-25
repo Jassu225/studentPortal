@@ -12,8 +12,11 @@
     "electron": "electron electron-starter.js"
   },
   "dependencies": {
+    "bluebird": "^3.5.1",
     "electron": "^2.0.2",
+    "level-js": "^2.2.4",
     "linebyline": "^1.3.0",
+    "linvodb3": "^3.25.1",
     "material-design-icons-iconfont": "^3.0.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

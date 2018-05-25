@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <h2>Search By:</h2>
-    <v-radio-group v-model="radios" :mandatory="true" row>
+    <v-radio-group v-model="radios" :mandatory="true" row @change="keyChanged($event)">
       <v-radio
         v-for="(item,index) in searchKeys"
         :key="index"
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  props: ['searchKeys'],
+  props: ['searchKeys', 'keyChanged'],
   data: function() {
     return {
       select: null,
