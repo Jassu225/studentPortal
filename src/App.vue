@@ -34,14 +34,14 @@ body, html {
   width: 100%;
   height: 100%;
   margin: 0;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 .full-width {
-  width: 100%;
+  width: 100% !important;
 }
 
 .full-height {
-  height: 100%;
+  height: 100% !important;
 }
 </style>

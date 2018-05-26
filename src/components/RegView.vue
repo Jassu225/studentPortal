@@ -2,6 +2,7 @@
   <v-flex
   xs12
   sm6
+  sm12
   md4
   lg3
   >

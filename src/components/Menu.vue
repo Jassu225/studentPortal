@@ -10,7 +10,6 @@
         color="transparent"
         class="color"
         grow
-        
       >
         <v-tabs-slider color="white"></v-tabs-slider>
         <v-tab v-for="item in tabs" :key="item">
@@ -18,16 +17,17 @@
         </v-tab>
       </v-tabs>
     </v-toolbar>
-    <v-tabs-items v-model="tab" class="full-width height overflow">
+    <v-tabs-items v-model="tab" class="full-width height">
       <!-- Search DB Page -->
-      <v-tab-item class="overflow">
-        <v-card flat class="elevation-8 bg-color grid">
+      <v-tab-item class="sub-grid">
+        <v-card class="elevation-8 bg-color grid">
           <SearchTypes :searchKeys="searchKeys" :keyChanged="keyChanged"/>
           <Searchbar :searchDB="searchDB"/>
         </v-card>
-        <v-divider></v-divider>
-        <reg-view v-if="selectedKey === searchKeys[0]" :record="record"/>
-        <name-view v-if="selectedKey === searchKeys[1]" :records="records"/>
+        <v-card class="overflow hight">
+          <reg-view v-if="selectedKey === searchKeys[0]" :record="record"/>
+          <name-view v-if="selectedKey === searchKeys[1]" :records="records"/>
+        </v-card>
       </v-tab-item>
       <!-- Create BD Page -->
       <v-tab-item>
@@ -148,16 +148,22 @@ export default {
 
 .main-grid {
   display: grid;
-  grid-template-rows: 1fr 8fr;
+  grid-template-rows: 1fr 6fr auto;
   grid-template-columns: 1fr;
 }
 
 .overflow {
-  overflow: auto;
+  overflow-y: auto;
 }
 
-.height {
-  height: 80%;
+.sub-grid {
+  display: grid;
+  grid-template-rows: 1fr 9fr;
+  grid-template-columns: 1fr;
+}
+
+.hight {
+  height: 90% !important;
 }
 </style>
 
