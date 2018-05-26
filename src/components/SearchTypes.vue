@@ -1,16 +1,14 @@
 <template>
-  <v-container fluid>
-    <h2>Search By:</h2>
-    <v-radio-group v-model="radios" :mandatory="true" row @change="keyChanged($event)">
-      <v-radio
-        v-for="(item,index) in searchKeys"
-        :key="index"
-        :label="item"
-        :value="item"
-        >
-      </v-radio>
-    </v-radio-group>
-  </v-container>
+  <v-flex xs5 class="item1">
+    <v-select
+      :items="searchKeys"
+      v-model="select"
+      label="Select"
+      item-value="text"
+      color="black"
+      @change="keyChanged($event)"
+    ></v-select>
+  </v-flex>
 </template>
 
 <script>
@@ -29,8 +27,8 @@ export default {
 </script>
 
 <style>
-.v-select {
-  display: grid;
+.item1 {
+  max-width: 100% !important;
 }
 </style>
 

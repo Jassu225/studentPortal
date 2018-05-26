@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-toolbar color="purple" dark tabs>
+  <div class="main-grid full-width full-height">
+    <v-toolbar color="transparant" class="bgColor" dark tabs>
       <v-spacer></v-spacer>
       <v-toolbar-title class="white--text">S.M.A.P. School, Gandhinagar, Chirala</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -8,96 +8,26 @@
         slot="extension"
         v-model="tab"
         color="transparent"
+        class="color"
         grow
+        
       >
-        <v-tabs-slider></v-tabs-slider>
+        <v-tabs-slider color="white"></v-tabs-slider>
         <v-tab v-for="item in tabs" :key="item">
           {{ item }}
         </v-tab>
       </v-tabs>
     </v-toolbar>
-    <v-tabs-items v-model="tab">
+    <v-tabs-items v-model="tab" class="full-width height overflow">
       <!-- Search DB Page -->
-      <v-tab-item >
-        <v-card flat class="elevation-8 bg-color">
+      <v-tab-item class="overflow">
+        <v-card flat class="elevation-8 bg-color grid">
           <SearchTypes :searchKeys="searchKeys" :keyChanged="keyChanged"/>
           <Searchbar :searchDB="searchDB"/>
         </v-card>
-        <!-- <hr class="color"> -->
         <v-divider></v-divider>
-        <v-flex v-if="selectedKey === searchKeys[0]"
-        xs12
-        sm6
-        md4
-        lg3
-        >
-          <v-card>
-            <v-card-title><h4>{{ record ? record.name : 'Student Name' }}</h4></v-card-title>
-            <v-divider></v-divider>
-            <v-list dense>
-              <v-list-tile>
-                <v-list-tile-content>Registration Number:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.registrationNumber : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Father Name:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.fatherName : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Mother Name:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.motherName : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Gender:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.gender : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Place of Birth:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.birthPlace : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Father's Occupation:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.fatherOccuation : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Caste:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.caste : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Sub-caste:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.subCaste : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Date of Birth:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.dateOfBirth : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Date of Joining:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.dateOfJoining : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>From Class:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.fromClass : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>To Class:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.toClass : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>T.C. Issue Date:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.TCIssueDate : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Aadhar Number:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.AadharNumber : '--' }}</v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>Remarks:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ record ? record.Remarks : '--' }}</v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-          </v-card>
-        </v-flex>
+        <reg-view v-if="selectedKey === searchKeys[0]" :record="record"/>
+        <name-view v-if="selectedKey === searchKeys[1]" :records="records"/>
       </v-tab-item>
       <!-- Create BD Page -->
       <v-tab-item>
@@ -113,6 +43,9 @@
 <script>
 import Searchbar from './Searchbar.vue';
 import SearchTypes from './SearchTypes.vue';
+import RegView from './RegView.vue';
+import NameView from './NameView.vue';
+
 // console.log(__filename);
 import dbHandler from './../assets/js/db.js';
 
@@ -124,6 +57,7 @@ export default {
       tab: null,
       selectedKey: null,
       record: null,
+      records: [],
       selected_color_index: 0,
       color: ['black--text'],
       tabs: [
@@ -135,18 +69,34 @@ export default {
     }
   },
   components: {
-    Searchbar, SearchTypes
+    Searchbar, SearchTypes, RegView, NameView
   },
   methods: {
     searchDB: async function(event) {
       let value = event.target.value;
       console.log(value);
       
-      let record = null;
       if(this.selectedKey) {
-        record = await dbHandler.searchDB(value, this.selectedKey, this.searchKeys);
-        console.log(record);
-        this.record = record;
+        let record = null,records = null;
+        switch(this.selectedKey) {
+          case this.searchKeys[0]:
+            if( parseInt(value) ) {
+              record = await dbHandler.searchByRegID(parseInt(value));
+              console.log(record);
+              this.record = record;
+            } else if(value ) { 
+              alert('Enter a valid registration number'); 
+            }
+            break;
+          
+          case this.searchKeys[1]:
+            if(value) {
+              records = await dbHandler.searchByName(value);
+              console.log(records);
+              this.records = records;
+            }
+            break;
+        }
       } else {
         alert('Please select an operation');
       }
@@ -170,7 +120,8 @@ export default {
 }
 
 .color {
-  border-color: royalblue;
+  background-color: rgb(34, 140, 187);
+  border-color: rgb(34, 140, 187);
 }
 
 .bg-color {
@@ -179,6 +130,34 @@ export default {
 
 .font-sz {
   font-size: 1.4rem;
+}
+
+.bgColor {
+  background-color: #2d7eab !important;
+  border-color: #2d7eab !important;
+}
+
+.grid {
+  padding: 0 10px;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 4fr;
+  /* grid-gap: 1em; */
+  grid-template-areas: "item1 item2";
+}
+
+.main-grid {
+  display: grid;
+  grid-template-rows: 1fr 8fr;
+  grid-template-columns: 1fr;
+}
+
+.overflow {
+  overflow: auto;
+}
+
+.height {
+  height: 80%;
 }
 </style>
 

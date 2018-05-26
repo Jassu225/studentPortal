@@ -78,24 +78,20 @@ const dbHandler = {
 
     });
   },
-  searchDB: async function(value, key, keys) {
-    switch(key) {
-      case keys[0]:
-        if( parseInt(value) )
-          return await this.searchByRegID(parseInt(value));
-        else if(value ) { 
-          alert('Enter a valid registration number'); 
-        }
-        break;
-    }
-  },
   searchByRegID: async function(value) {
-    // db.findOne({ registrationNumber: value }, function (err, doc) {
-    //   // doc is the document Mars
-    //   // If no document is found, doc is null
-    //   console.log(doc);
-    // });
     return await db.findOneAsync({ registrationNumber: value });
+  },
+  searchByName: async function(value) {
+    return await db.findAsync({ name: { $regex: new RegExp(value.toString(), "i") } });
+    // .then(docs => {
+    //   // console.log(docs);
+    //   // store.commit({
+    //   //   type: mutationTypes.ADD_SONGS,
+    //   //   songs: docs
+    //   // });
+    //   return docs;
+    // })
+    // .catch(err => console.log(err));
   }
 }
 

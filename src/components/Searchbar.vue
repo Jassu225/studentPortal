@@ -1,9 +1,9 @@
 <template>
-  <v-flex xs6>
+  <v-flex xs6 class="item2">
     <v-text-field
       append-icon="search"
       label="Search"
-      class="mx-4"
+      class="mx-4 secondary--text"
       flat
       @keyup="searchDB($event)"
     ></v-text-field>
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style>
-/* .bottom {
-  outline: 1.5px solid gray;
-} */
+.item2 {
+  max-width: 95% !important;
+}
 </style>

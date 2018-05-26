@@ -1,8 +1,10 @@
 <template>
-  <div id="app">
-    <!-- <router-view/> -->
-    <!-- <DBconverter /> -->
-    <Menu />
+  <div id="app" class="full-width full-height">
+    <v-app class="full-width full-height">
+      <!-- <router-view/> -->
+      <!-- <DBconverter /> -->
+      <Menu />
+    </v-app>
   </div>
 </template>
 
@@ -26,5 +28,20 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow-y: hidden;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-height {
+  height: 100%;
 }
 </style>
