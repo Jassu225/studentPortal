@@ -7,7 +7,10 @@ let mainWindow = null;
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    webPreferences: {
+      nativeWindowOpen: true
+    }
   });
 
   // mainWindow.loadURL(path.join(__dirname, 'index.html'));

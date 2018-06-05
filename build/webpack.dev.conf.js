@@ -59,15 +59,25 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }),
     // copy custom static assets
     new CopyWebpackPlugin([
+      // {
+      //   from: path.resolve(__dirname),
+      //   to: config.dev.assetsSubDirectory
+      //   // to: './static'
+      //   // ignore: ['.*']
+      // },
       {
-        from: path.resolve(__dirname, '../static'),
-        to: config.dev.assetsSubDirectory,
-        ignore: ['.*']
+        from: path.join(path.resolve(__dirname), "../src/assets/html/*.html"),
+        to: path.join(path.resolve(__dirname), "../static/"),
+        toType: 'dir',
+        force: true
       }
-    ])
+    ],
+    { copyUnmodified: true }
+    )
   ]
 })
 
+// console.log(path.resolve(__dirname));
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port
   portfinder.getPort((err, port) => {
