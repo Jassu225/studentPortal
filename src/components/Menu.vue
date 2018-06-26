@@ -17,16 +17,24 @@
         </v-tab>
       </v-tabs>
     </v-toolbar>
-    <v-tabs-items v-model="tab" class="full-width height">
+    <v-tabs-items v-model="tab" class="full-width">
       <!-- Search DB Page -->
-      <v-tab-item class="sub-grid">
+      <v-tab-item class="sub-grid full-height">
         <v-card class="elevation-8 bg-color grid">
-          <SearchTypes :searchKeys="searchKeys" :keyChanged="keyChanged"/>
-          <Searchbar :searchDB="searchDB"/>
+          <search-types :searchKeys="searchKeys" :keyChanged="keyChanged"/>
+          <searchbar 
+            :searchDB="searchDB"
+            :resetSearchValue="resetSearchValue"
+            :selectedKey="selectedKey"
+            :searchKeys="searchKeys"
+          />
         </v-card>
-        <v-card class="overflow hight">
+        <v-card class="overflow">
           <reg-view v-if="selectedKey === searchKeys[0]" :record="record"/>
-          <name-view v-if="selectedKey === searchKeys[1]" :records="records"/>
+          <name-view v-if="selectedKey === searchKeys[1]" :records="records" :print="print"/>
+          <v-footer v-if="selectedKey === searchKeys[0]" height="auto">
+            <v-spacer><v-btn class="blue-color" @click="print(record)">Print</v-btn></v-spacer>
+          </v-footer>
         </v-card>
       </v-tab-item>
       <!-- Create BD Page -->
@@ -37,6 +45,8 @@
         </v-card>
       </v-tab-item>
     </v-tabs-items>
+    <v-footer class="bgColor ">
+      Copyrights</v-footer>
   </div>
 </template>
 
@@ -45,6 +55,7 @@ import Searchbar from './Searchbar.vue';
 import SearchTypes from './SearchTypes.vue';
 import RegView from './RegView.vue';
 import NameView from './NameView.vue';
+import certificate from '../assets/js/studyCertificate.js';
 
 // console.log(__filename);
 import dbHandler from './../assets/js/db.js';
@@ -58,6 +69,7 @@ export default {
       selectedKey: null,
       record: null,
       records: [],
+      resetSearchValue: false,
       selected_color_index: 0,
       color: ['black--text'],
       tabs: [
@@ -103,12 +115,51 @@ export default {
     },
     keyChanged: function(newKey) {
       this.selectedKey = newKey;
+      this.resetSearchValue = !this.resetSearchValue;
+
+      switch(this.selectedKey) {
+        case this.searchKeys[0]:
+          this.record = null;
+          break;
+        case this.searchKeys[1]:
+          this.records = [];
+          break;
+      }
     },
     createDB: function() {
       dbHandler.createDB(this.print);
     },
-    print: function(line) {
-      printElement.innerHTML = "<b>Adding: </b> " + line;
+    print: function(candidate) {
+      let newWindow = window.open('');
+      newWindow.document.open();
+      newWindow.document.write(certificate.content);
+      newWindow.document.close();
+      let doc = newWindow.document;
+      doc.getElementsByClassName('reg-number')[0].textContent = candidate.registrationNumber;
+      doc.getElementsByClassName('name')[0].textContent = candidate.name;
+      doc.getElementsByClassName('parent-name')[0].textContent = candidate.fatherName ? candidate.fatherName : (candidate.motherName ? candidate.motherName : "");
+      doc.getElementsByClassName('from-class')[0].textContent = candidate.fromClass ? this.getClass(candidate.fromClass) : "----";
+      doc.getElementsByClassName('to-class')[0].textContent = candidate.toClass ? this.getClass(candidate.toClass) : "----";
+      doc.getElementsByClassName('joining-date')[0].textContent = candidate.dateOfJoining;
+      doc.getElementsByClassName('tc-issue-date')[0].textContent = candidate.TCIssueDate ? candidate.TCIssueDate : "--/--/----";
+      newWindow.focus();
+      // newWindow.print();
+      console.log(__filename);
+    },
+    getClass: function(Class) {
+      switch(parseInt(Class)) {
+        case 1: return "First";
+        case 2: return "Second";
+        case 3: return "Third";
+        case 4: return "Fourth";
+        case 5: return "Fifth";
+        case 6: return "Sixth";
+        case 7: return "Seventh";
+        case 8: return "Eighth";
+        case 9: return "Ninth";
+        case 10: return "Tenth";
+        default: return Class;
+      }
     }
   }
 }
@@ -148,7 +199,7 @@ export default {
 
 .main-grid {
   display: grid;
-  grid-template-rows: 1fr 6fr auto;
+  grid-template-rows: 2fr auto 1fr;
   grid-template-columns: 1fr;
 }
 
@@ -162,8 +213,9 @@ export default {
   grid-template-columns: 1fr;
 }
 
-.hight {
-  height: 90% !important;
+.blue-color {
+  background-color: #23c1c1 !important;
+  border-color: #23c1c1 !important;
 }
 </style>
 
