@@ -1,40 +1,14 @@
 <template>
   <div class="mathched-students-container full-width full-height">
-    <!-- <v-data-table
-      :headers="headers"
-      :items="records"
-      class="elevation-4 full-width full-height matched-students-table"
-    >
-      <template #headerCell="{ header }">
-        <h3>{{ header.text }}</h3>
-      </template>
+    <data-table :headers="headers" :items="records" :rows-per-page-number="25" row-text="record">
       <template #item="{ item }">
-        <tr>
-          <td>{{ item.name }}</td>
-          <td>{{ item.fatherName }}</td>
-          <td>{{ item.fromClass }}</td>
-          <td>{{ item.toClass }}</td>
-          <td>{{ item.dateOfBirth }}</td>
-          <td>
-            <v-btn color="primary" dark @click="showDetails(item)">Details</v-btn>
-          </td>
-        </tr>
-      </template>
-    </v-data-table> -->
-    <data-table :headers="headers" :items="records" :rows-per-page-number="5" row-text="song">
-      <!-- <song
-        slot="content"
-        slot-scope="songItem"
-        :song="songItem.item"
-      /> -->
-      <template #content="{ item }">
         <div class="student-record">
-          <div>{{ item.name }}</div>
-          <div>{{ item.fatherName }}</div>
-          <div>{{ item.fromClass }}</div>
-          <div>{{ item.toClass }}</div>
-          <div>{{ item.dateOfBirth }}</div>
-          <div>
+          <div class="sr-name" :style="cellsStyles[0]">{{ item.name || naText }}</div>
+          <div class="sr-dad-name" :style="cellsStyles[1]">{{ item.fatherName || naText }}</div>
+          <div :style="cellsStyles[2]">{{ item.fromClass || naText }}</div>
+          <div :style="cellsStyles[3]">{{ item.toClass || naText }}</div>
+          <div :style="cellsStyles[4]">{{ item.dateOfBirth || naText }}</div>
+          <div :style="cellsStyles[5]">
             <v-btn color="primary" dark @click="showDetails(item)">Details</v-btn>
           </div>
         </div>
@@ -74,18 +48,32 @@ export default {
   },
   data() {
     return {
-      headers: [
-        { text: 'Name', align: 'center', sortable: false, value: 'Name' },
-        { text: 'Father Name', align: 'center', sortable: false, value: 'Father Name' },
-        { text: 'From Class', align: 'center', sortable: false, value: 'From Class' },
-        { text: 'To Class', align: 'center', sortable: false, value: 'To Class' },
-        { text: 'Date of Birth', align: 'center', sortable: false, value: 'Date of Birth' },
-        { text: 'Action', align: 'center', sortable: false, value: 'Action' },
-      ],
-      entries: null,
       dialog: false,
       record: null,
     };
+  },
+  computed: {
+    headers() {
+      return [
+        { text: 'Name', align: 'left', sortable: false, value: 'name', width: '30%' },
+        { text: 'Father Name', align: 'left', sortable: false, value: 'fatherName', width: '20%' },
+        { text: 'From Class', align: 'center', sortable: false, value: 'fromClass', width: '10%' },
+        { text: 'To Class', align: 'center', sortable: false, value: 'toClass', width: '10%' },
+        { text: 'Date of Birth', align: 'center', sortable: false, value: 'dateOfBirth', width: '15%' },
+        { text: 'Action', align: 'center', sortable: false, value: 'action', width: '15%' },
+      ];
+    },
+    cellsStyles() {
+      return this.headers.map(header => ({
+        width: header.width ? header.width : 'auto',
+        textAlign: header.align ? header.align : 'center',
+        flexGrow: 0,
+        flexShrink: 0,
+      }));
+    },
+    naText() {
+      return '--';
+    },
   },
   methods: {
     showDetails(record) {
@@ -102,29 +90,15 @@ export default {
 
 <style lang="scss">
 .mathched-students-container {
-  .matched-students-table {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 60px;
-    min-height: 0;
-    .v-data-table__wrapper {
-      overflow: auto;
-      table {
-        width: 100%;
-        height: 100%;
-        // tbody {
-        //   min-height: 0px;
-        //   overflow: auto;
-        // }
-        // thead, tbody tr {
-        //   display:table;
-        //   width:100%;
-        //   table-layout:fixed;/* even columns width , fix width of table too*/
-        // }
-        // thead {
-        //   width: calc( 100% - 1rem )/* scrollbar is average 1em/16px width, remove it from thead width */
-        // }
-      }
+  .student-record {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    .sr-name, .sr-dad-name {
+      min-width: 0;
+      padding-right: 10px;
     }
   }
 }

@@ -1,23 +1,25 @@
 <template>
-  <div>
-    <v-flex
+  <div class="search-bar">
+    <div
       v-if="(selectedKey === searchKeys[0]) || (selectedKey === searchKeys[1])"
-      xs6
-      class="item2"
+      class="sb-text-box"
     >
       <v-text-field
         v-model="searchValue"
         label="Search"
         class="mx-4 secondary--text"
         flat
+        :type="selectedKey === searchKeys[0] ? 'number': 'text'"
+        dark
+        color="white"
         @input="emitTextChangedEvent"
       >
         <template #append>
           <span class="fas fa-times pointer" />
         </template>
       </v-text-field>
-    </v-flex>
-    <v-flex v-else-if="selectedKey === searchKeys[2]" xs12 md4 class="item">
+    </div>
+    <div v-else-if="selectedKey === searchKeys[2]" class="item">
       <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
         <template #activator="{ on }">
           <v-text-field
@@ -34,7 +36,7 @@
           <v-btn text color="primary" @click.native="$refs.dialog.save(date)">OK</v-btn>
         </v-date-picker>
       </v-dialog>
-    </v-flex>
+    </div>
   </div>
 </template>
 
@@ -61,24 +63,32 @@ export default {
     };
   },
   methods: {
-    emitTextChangedEvent() {
+    emitTextChangedEvent: debounce(function () {
       console.log('search text changed');
       this.$emit('searchTextChanged', this.searchValue);
-    },
-    searchTextChanged() {
-      debounce(this.emitTextChangedEvent, 350);
-    },
+    }, 300),
   },
 };
 </script>
 
-<style>
-.item2 {
-  max-width: 95% !important;
-}
+<style lang="scss">
+.search-bar {
+  width: 100%;
+  .sb-text-box {
+    max-width: 95% !important;
+    .v-input__slot {
+      input {
+        caret-color: currentColor;
+      }
+      &:after {
+        border-color: #bdbdbd !important;
+      }
+    }
+  }
 
-.item {
-  margin-left: 2rem;
-  max-width: 90% !important;
+  .item {
+    margin-left: 2rem;
+    max-width: 90% !important;
+  }
 }
 </style>

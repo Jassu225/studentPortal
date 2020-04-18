@@ -4,10 +4,10 @@
     :items="searchKeys"
     label="Select type of search"
     item-value="text"
-    color="black"
     class="search-type"
     outlined
     hide-details
+    dark
     @change="selectionChanged"
   />
 </template>

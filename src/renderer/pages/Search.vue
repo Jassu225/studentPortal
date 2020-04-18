@@ -12,7 +12,7 @@
         @searchTextChanged="searchDB"
       />
     </div>
-    <v-card class="full-width full-height overflow">
+    <div class="full-width full-height overflow">
       <student-detailed-info v-if="showDetailedView" :record="record || {}" />
       <matched-students v-else-if="showTableView" :records="records" />
       <v-footer v-if="showDetailedView" height="auto">
@@ -20,7 +20,7 @@
           <v-btn class="blue-color" @click.native="print(record)">Print</v-btn>
         </v-spacer>
       </v-footer>
-    </v-card>
+    </div>
   </div>
 </template>
 

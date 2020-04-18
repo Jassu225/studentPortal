@@ -76,6 +76,7 @@ html,
   }
   .nuxt-app {
     grid-area: nuxt-app;
+    background-color: #3e4144;
   }
   .app-footer {
     grid-area: app-footer;
