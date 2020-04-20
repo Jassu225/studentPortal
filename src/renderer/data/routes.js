@@ -1,6 +1,6 @@
 import Search from '~/pages/Search.vue';
 
-export default {
+const routes = {
   searchPage: {
     name: 'Search',
     path: '/',
@@ -12,3 +12,5 @@ export default {
     component: null,
   },
 };
+
+export default routes;

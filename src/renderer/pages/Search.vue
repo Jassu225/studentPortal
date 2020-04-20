@@ -34,7 +34,7 @@ import print from '~/mixins/print';
 import classFormatter from '~/mixins/class-formatter';
 // import certificate from './../assets/js/studyCertificate.js';
 
-const searchKeys = ['Reg. No.', 'Student Name', 'Date of Birth', 'Date of Birth Range', 'Joining Date Range'];
+const searchKeys = ['Reg. No.', 'Student Name', 'Date of Birth', 'Joining Date Range'];
 
 export default {
   name: 'Search',

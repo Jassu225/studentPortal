@@ -48,31 +48,25 @@ const createTableContent = function () {
 const createFooter = function () {
   const createElement = this.$createElement;
   const nextBtn = createElement('div', {
-    class: 'cdt-pagination-icon',
+    class: [
+      'cdt-pagination-icon',
+      { disabled: this.currentPage === this.totalPages },
+    ],
     on: {
       click: this.goToNextPage,
     },
   },
-  [createElement('i', {
-    class: [
-      'fas fa-chevron-right',
-      { disabled: this.currentPage === this.totalPages },
-    ],
-
-  })]);
+  [createElement('i', { class: 'fas fa-chevron-right' })]);
   const prevtBtn = createElement('div', {
-    class: 'cdt-pagination-icon',
+    class: [
+      'cdt-pagination-icon',
+      { disabled: this.currentPage === 1 },
+    ],
     on: {
       click: this.goToPreviousPage,
     },
   },
-  [createElement('i', {
-    class: [
-      'fas fa-chevron-left',
-      { disabled: this.currentPage === 1 },
-    ],
-
-  })]);
+  [createElement('i', { class: 'fas fa-chevron-left' })]);
   const infoText = createElement('div', {
     class: 'info-text',
   }, this.infoText);
@@ -124,7 +118,7 @@ export default {
     },
     infoText() {
       return `Showing ${this.rowText}${this.items.length > 1 ? 's' : ''} ` +
-        `${this.start + 1} to ${this.end} of ${this.items.length}`;
+        `${Math.min(this.start + 1, this.items.length)} to ${this.end} of ${this.items.length}`;
     },
     slicedItems() {
       return this.items.slice(this.start, this.end);
@@ -157,7 +151,7 @@ export default {
   render(createElement) {
     return createElement(
       'div',
-      { staticClass: 'custom-data-table' },
+      { class: 'custom-data-table' },
       [
         createHeader.call(this),
         createTableContent.call(this),
