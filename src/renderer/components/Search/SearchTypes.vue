@@ -1,7 +1,7 @@
 <template>
   <v-select
-    v-model="select"
-    :items="searchKeys"
+    v-model="selectedValue"
+    :items="searchTypes"
     label="Select type of search"
     item-value="text"
     class="search-type"
@@ -13,26 +13,29 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   props: {
-    searchKeys: {
+    searchTypes: {
       type: Array,
       required: true,
     },
-    selectedKey: {
+    selectedSearchType: {
       type: String,
       required: true,
     },
   },
   data() {
     return {
-      select: this.selectedKey,
-      // radios: null,
+      selectedValue: this.selectedSearchType,
     };
   },
   methods: {
-    selectionChanged(e) {
-      this.$emit('selectionChanged', e);
+    ...mapActions({
+      setSearchType: 'Search/setSearchType',
+    }),
+    selectionChanged() {
+      this.setSearchType(this.selectedValue);
     },
   },
 };

@@ -16,31 +16,23 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import classFormatter from '~/mixins/class-formatter';
-
-// const fieldTypes = {
-//   text: 'text',
-//   number: 'number',
-
-// };
 
 export default {
   name: 'StudentDetailedInfo',
   mixins: [classFormatter],
-  props: {
-    record: {
-      type: Object,
-      required: true,
-    },
-  },
   computed: {
+    ...mapGetters({
+      record: 'Search/specificRecord',
+    }),
     formattedInfo() {
       const record = this.record || {};
       const na = '--';
       return [
         {
-          title: 'Registration Number',
-          value: record.registrationNumber || na,
+          title: 'Admission Number',
+          value: record.admissionNumber || na,
           class: '',
         },
         {
@@ -100,17 +92,17 @@ export default {
         },
         {
           title: 'T.C. Issue Date',
-          value: record.TCIssueDate || na,
+          value: record.tcIssueDate || na,
           class: '',
         },
         {
           title: 'Aadhar Number',
-          value: record.AadharNumber || na,
+          value: record.aadharNumber || na,
           class: '',
         },
         {
           title: 'Remarks',
-          value: record.Remarks || na,
+          value: record.remarks || na,
           class: '',
         },
       ];

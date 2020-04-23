@@ -1,7 +1,7 @@
 import routes from './routes';
-import dateTypes from './date-types';
+import searchTypes from './search-types';
 
 export {
   routes,
-  dateTypes,
+  searchTypes,
 };

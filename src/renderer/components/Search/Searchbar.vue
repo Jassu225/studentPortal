@@ -1,53 +1,35 @@
 <template>
   <div class="search-bar">
     <div
-      v-if="(selectedKey === searchKeys[0]) || (selectedKey === searchKeys[1])"
+      v-if="!isDateField"
       class="sb-text-box"
     >
       <v-text-field
-        v-model="searchValue"
+        v-model="textValue"
         label="Search"
         class="mx-4 secondary--text"
         flat
-        :type="selectedKey === searchKeys[0] ? 'number': 'text'"
+        :type="textFieldType"
         dark
         color="white"
-        @input="emitTextChangedEvent"
+        @input="setValueLazily"
       >
         <template #append>
           <span class="fas fa-times pointer" />
         </template>
       </v-text-field>
     </div>
-    <div v-else-if="selectedKey === searchKeys[2]" class="sb-date-field">
-      <date-menu
-        v-model="date"
-        :type="selectedDateType"
-      />
-      <v-select
-        v-model="selectedDateType"
-        :items="dateTypes"
-        label="Select type"
-        item-value="text"
-        class="search-type"
-        outlined
-        hide-details
-        dark
-        @input="dateTypeChanged"
-      />
-    </div>
+    <date-menu
+      v-else
+    />
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import { debounce } from 'debounce';
+import { searchTypes } from '~/data';
 import DateMenu from '~/components/Generic/DateMenu.vue';
-import { dateTypes } from '~/data';
-
-const dateFormatLength = {
-  date: 10,
-  month: 7,
-};
 
 export default {
   name: 'Searchbar',
@@ -55,52 +37,40 @@ export default {
     DateMenu,
   },
   props: {
-    selectedKey: {
-      type: String,
-      required: true,
-    },
-    searchKeys: {
+    searchTypes: {
       type: Array,
       required: true,
     },
   },
   data() {
     return {
-      searchValue: '',
-      selectedDateType: 'month',
-      date: new Date().toISOString().substr(0, 7),
+      textValue: '',
     };
   },
   computed: {
-    dateTypes() {
-      return Object.keys(dateTypes).map(key => dateTypes[key]);
+    ...mapGetters({
+      searchType: 'Search/searchType',
+      searchValue: 'Search/searchValue',
+    }),
+    isDateField() {
+      return this.searchType === searchTypes.dateOfBirth || this.searchType === searchTypes.joiningDate;
+    },
+    textFieldType() {
+      return this.searchType === searchTypes.aadharNumber ? 'number' : 'text';
+    },
+  },
+  watch: {
+    searchValue(value) {
+      this.textValue = value;
     },
   },
   methods: {
-    emitTextChangedEvent: debounce(function () {
-      // console.log('search text changed');
-      this.$emit('searchTextChanged', this.searchValue);
+    ...mapActions({
+      setSearchValue: 'Search/setSearchValue',
+    }),
+    setValueLazily: debounce(function () {
+      this.setSearchValue(this.textValue);
     }, 300),
-    emitDateChanged(newDate) {
-      this.$emit('dateChanged', newDate);
-    },
-    getAdjustedDate(date, dateType) {
-      const lengthToBeAdjusted = dateFormatLength[dateType] - date.length;
-      let newDate = date;
-      if (lengthToBeAdjusted > 0) {
-        newDate += '-01';
-      } else if (lengthToBeAdjusted < 0) {
-        newDate = newDate.substring(0, newDate.length + lengthToBeAdjusted);
-      }
-      return newDate;
-    },
-    dateTypeChanged() {
-      if (this.selectedDateType === dateTypes.range) {
-        this.date = [this.getAdjustedDate(this.date, dateTypes.date)];
-      } else {
-        this.date = this.getAdjustedDate(Array.isArray(this.date) ? this.date[0] : this.date, this.selectedDateType);
-      }
-    },
   },
 };
 </script>
@@ -120,12 +90,12 @@ export default {
       }
     }
   }
-  .sb-date-field {
-    width: 100%;
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 2fr 1fr;
-    column-gap: 1rem;
-  }
+  // .sb-date-field {
+  //   width: 100%;
+  //   display: grid;
+  //   grid-template-rows: 1fr;
+  //   grid-template-columns: 2fr 1fr;
+  //   column-gap: 1rem;
+  // }
 }
 </style>

@@ -16,11 +16,11 @@
     </data-table>
     <v-dialog v-model="dialog" max-width="600">
       <v-card>
-        <student-detailed-info :record="record || {}" />
+        <student-detailed-info />
         <v-card-actions>
           <v-spacer />
           <v-btn color="green darken-1" text @click.native="hideDetails">Close</v-btn>
-          <v-btn color="green darken-1" text @click.native="print(record)">Print</v-btn>
+          <v-btn color="green darken-1" text @click.native="print(specificRecord)">Print</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 import DataTable from '~/components/Generic/DataTable.vue';
 import StudentDetailedInfo from '~/components/SearchResult/StudentDetailedInfo.vue';
 import print from '~/mixins/print';
@@ -40,19 +41,16 @@ export default {
     // StudyCertificate,
   },
   mixins: [print],
-  props: {
-    records: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
       dialog: false,
-      record: null,
     };
   },
   computed: {
+    ...mapGetters({
+      records: 'Search/records',
+      specificRecord: 'Search/specificRecord',
+    }),
     headers() {
       return [
         { text: 'Name', align: 'left', sortable: false, value: 'name', width: '30%' },
@@ -76,13 +74,16 @@ export default {
     },
   },
   methods: {
+    ...mapMutations({
+      setSpecificRecord: 'Search/SET_SPECIFIC_RECORD',
+    }),
     showDetails(record) {
-      this.record = record;
+      this.setSpecificRecord(record);
       this.dialog = true;
     },
     hideDetails() {
       this.dialog = false;
-      this.record = null;
+      this.setSpecificRecord(null);
     },
   },
 };

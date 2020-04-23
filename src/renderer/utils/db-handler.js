@@ -1,3 +1,4 @@
+import isNaN from '~/utils/is-nan';
 const { resolve } = require('path');
 const leveljs = require('level-js');
 const Linvodb = require('linvodb3');
@@ -13,7 +14,7 @@ Linvodb.defaults.store = {
 Linvodb.path = app.getPath('userData');
 
 let db = new Linvodb('song', {
-  registrationNumber: Number,
+  admissionNumber: Number,
   name: String,
   fatherName: String,
   motherName: String,
@@ -26,17 +27,37 @@ let db = new Linvodb('song', {
   dateOfJoining: String,
   fromClass: Number,
   toClass: Number,
-  TCIssueDate: String,
-  AadharNumber: Number,
-  Remarks: String,
+  tcIssueDate: String,
+  aadharNumber: Number,
+  remarks: String,
 });
 
 db.ensureIndex({
-  fieldName: 'registrationNumber',
+  fieldName: 'admissionNumber',
   unique: true,
 });
 
 db = Promise.promisifyAll(db);
+
+const formatAadharNumber = aadharNumber => {
+  const formattedAadharNumber = parseInt(aadharNumber && aadharNumber.toString().trim().replace(/ /g, ''));
+  if (isNaN(formattedAadharNumber)) {
+    return aadharNumber?.toString().trim();
+  }
+  return formattedAadharNumber;
+};
+
+const formatClass = classNumber => {
+  const formattedClass = parseInt(classNumber);
+  if (isNaN(formattedClass)) {
+    return classNumber?.toString().trim();
+  }
+  return formattedClass;
+};
+
+const formatDate = date => {
+  return date?.toString().trim().replace(/ /g, '').replace(/-/g, '/');
+};
 
 const dbHandler = {
   createDB(callback) {
@@ -58,7 +79,7 @@ const dbHandler = {
       const row = line.split(',');
       // console.log(row.length);
       db.insert({
-        registrationNumber: parseInt(row[0]),
+        admissionNumber: parseInt(row[0]),
         name: row[1],
         fatherName: row[2],
         motherName: row[3],
@@ -67,16 +88,17 @@ const dbHandler = {
         fatherOccuation: row[6],
         caste: row[7],
         subCaste: row[8],
-        dateOfBirth: row[9],
-        dateOfJoining: row[10],
-        fromClass: (row[11] ? parseInt(row[11]) : row[11]),
-        toClass: (row[12] ? parseInt(row[12]) : row[12]),
-        TCIssueDate: row[13],
-        AadharNumber: (row[14] ? parseInt(row[14]) : row[14]),
-        Remarks: row[15],
+        dateOfBirth: formatDate(row[9]),
+        dateOfJoining: formatDate(row[10]),
+        fromClass: formatClass(row[11]),
+        toClass: formatClass(row[12]),
+        tcIssueDate: formatDate(row[13]),
+        aadharNumber: formatAadharNumber(row[14]),
+        remarks: row[15],
       }, function (err, newDoc) {
-        console.log(err);
-        console.log(newDoc._id);
+        if (err) {
+          console.error(err);
+        }
       });
     });
 
@@ -85,20 +107,14 @@ const dbHandler = {
     });
   },
   searchByRegID(value) {
-    return db.findOneAsync({ registrationNumber: value });
+    return db.findOneAsync({ admissionNumber: value });
+  },
+  searchByAadharNumber(aadharNumber) {
+    return db.findOneAsync({ aadharNumber: { $regex: new RegExp(aadharNumber.toString(), 'i') } });
   },
   searchByName(value) {
     return db.findAsync({ name: { $regex: new RegExp(value.toString(), 'i') } });
-    // .then(docs => {
-    //   // console.log(docs);
-    //   // store.commit({
-    //   //   type: mutationTypes.ADD_SONGS,
-    //   //   songs: docs
-    //   // });
-    //   return docs;
-    // })
-    // .catch(err => console.log(err));
   },
 };
-// window.dbHandler = dbHandler;
+window.dbHandler = dbHandler;
 export default dbHandler;

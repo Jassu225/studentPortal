@@ -51,6 +51,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
     "bluebird": "^3.7.2",
+    "date-fns": "^2.12.0",
     "debounce": "^1.2.0",
     "electron-devtools-installer": "^3.0.0",
     "level-js": "^5.0.2",
