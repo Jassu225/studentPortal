@@ -7,7 +7,7 @@
           <div class="sr-dad-name" :style="cellsStyles[1]">{{ item.fatherName || naText }}</div>
           <div :style="cellsStyles[2]">{{ item.fromClass || naText }}</div>
           <div :style="cellsStyles[3]">{{ item.toClass || naText }}</div>
-          <div :style="cellsStyles[4]">{{ item.dateOfBirth || naText }}</div>
+          <div :style="cellsStyles[4]">{{ formatDate(item.dateOfBirth) || naText }}</div>
           <div :style="cellsStyles[5]">
             <v-btn color="primary" dark @click="showDetails(item)">Details</v-btn>
           </div>
@@ -32,6 +32,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import DataTable from '~/components/Generic/DataTable.vue';
 import StudentDetailedInfo from '~/components/SearchResult/StudentDetailedInfo.vue';
 import print from '~/mixins/print';
+import dateFormatter from '~/mixins/date-formatter';
 // import StudyCertificate from '~/components/StudyCerticate/StudyCertificate.vue';
 
 export default {
@@ -40,7 +41,7 @@ export default {
     DataTable,
     // StudyCertificate,
   },
-  mixins: [print],
+  mixins: [print, dateFormatter],
   data() {
     return {
       dialog: false,

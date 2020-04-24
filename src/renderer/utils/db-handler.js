@@ -1,5 +1,6 @@
 import isNaN from '~/utils/is-nan';
-const { resolve } = require('path');
+// import source from '~/assets/ADMISSION REGISTER.csv';
+const { resolve: pathResolve } = require('path');
 const leveljs = require('level-js');
 const Linvodb = require('linvodb3');
 const Promise = require('bluebird');
@@ -13,7 +14,7 @@ Linvodb.defaults.store = {
 };
 Linvodb.path = app.getPath('userData');
 
-let db = new Linvodb('song', {
+let db = new Linvodb('record', {
   admissionNumber: Number,
   name: String,
   fatherName: String,
@@ -23,11 +24,11 @@ let db = new Linvodb('song', {
   fatherOccuation: String,
   caste: String,
   subCaste: String,
-  dateOfBirth: String,
-  dateOfJoining: String,
+  dateOfBirth: Date,
+  dateOfJoining: Date,
   fromClass: Number,
   toClass: Number,
-  tcIssueDate: String,
+  tcIssueDate: Date,
   aadharNumber: Number,
   remarks: String,
 });
@@ -55,21 +56,25 @@ const formatClass = classNumber => {
   return formattedClass;
 };
 
+// todo: add date validator
 const formatDate = date => {
-  return date?.toString().trim().replace(/ /g, '').replace(/-/g, '/');
+  return date?.toString().trim().replace(/ /g, '').split(/[/|-]/).reverse().join('/');
 };
+
+// console.log(source);
 
 const dbHandler = {
   createDB(callback) {
     db.remove({}, { multi: true }, function (err, numRemoved) {
       if (err) console.log(err);
+      else console.log(numRemoved);
     });
 
     // console.log(path.resolve(__dirname));
 
     const lineReader = readline.createInterface({
       input: fs.createReadStream(
-        resolve('/Users/rentomojo/git/student-portal-revamp/src/renderer/assets/ADMISSION REGISTER.csv')
+        pathResolve('/Users/rentomojo/git/student-portal-revamp/src/renderer/assets/ADMISSION REGISTER.csv')
       ),
     });
 
@@ -98,6 +103,8 @@ const dbHandler = {
       }, function (err, newDoc) {
         if (err) {
           console.error(err);
+        } else {
+          console.log(newDoc);
         }
       });
     });
@@ -110,11 +117,12 @@ const dbHandler = {
     return db.findOneAsync({ admissionNumber: value });
   },
   searchByAadharNumber(aadharNumber) {
-    return db.findOneAsync({ aadharNumber: { $regex: new RegExp(aadharNumber.toString(), 'i') } });
+    return db.findOneAsync({ aadharNumber: { $regex: new RegExp(aadharNumber.toString()) } });
   },
   searchByName(value) {
     return db.findAsync({ name: { $regex: new RegExp(value.toString(), 'i') } });
   },
 };
 window.dbHandler = dbHandler;
+window.db = db;
 export default dbHandler;

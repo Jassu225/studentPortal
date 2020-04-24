@@ -18,10 +18,11 @@
 <script>
 import { mapGetters } from 'vuex';
 import classFormatter from '~/mixins/class-formatter';
+import dateFormatter from '~/mixins/date-formatter';
 
 export default {
   name: 'StudentDetailedInfo',
-  mixins: [classFormatter],
+  mixins: [classFormatter, dateFormatter],
   computed: {
     ...mapGetters({
       record: 'Search/specificRecord',
@@ -72,12 +73,12 @@ export default {
         },
         {
           title: 'Date of Birth',
-          value: record.dateOfBirth || na,
+          value: this.formatDate(record.dateOfBirth) || na,
           class: '',
         },
         {
           title: 'Date of Joining',
-          value: record.dateOfJoining || na,
+          value: this.formatDate(record.dateOfJoining) || na,
           class: '',
         },
         {
@@ -92,7 +93,7 @@ export default {
         },
         {
           title: 'T.C. Issue Date',
-          value: record.tcIssueDate || na,
+          value: this.formatDate(record.tcIssueDate) || na,
           class: '',
         },
         {
